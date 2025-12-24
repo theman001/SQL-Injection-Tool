@@ -38,7 +38,7 @@
 
 ```bash
 # 1. 필수 라이브러리 설치
-pip install requests tabulate keyboard
+pip install -r requirements.txt
 
 # 2. 실행 (관리자 권한 권장)
 python Total_Exploit.py
