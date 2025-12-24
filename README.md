@@ -23,30 +23,30 @@
 
 ## 🛠 공격 모드 상세 가이드
 
-`` `text
+```text
 1. Union-Based: 컬럼 수 자동 탐색 및 Hex 인코딩을 통한 광속 데이터 덤프
 2. Error-Based: XPath(ExtractValue) 문법 에러 유도를 통한 정밀 추출
 3. Blind (Boolean): 응답 본문의 참/거짓 지표(True Indicator) 기반 추론
 4. Blind (Time): SLEEP 함수를 이용한 응답 지연 기반 추론 (가장 강력한 은신)
-`` `
+```
 
 ---
 
 ## 📋 설치 및 실행 환경 구축
 
-`` `bash
+```bash
 # 1. 필수 라이브러리 설치
 pip install requests tabulate keyboard
 
 # 2. 실행 (관리자 권한 권장)
 python Total_Exploit.py
-`` `
+```
 
 ---
 
 ## 📂 프로젝트 구조 명세
 
-`` `python
+```python
 # 주요 엔진 구성
 class StealthNet:           # HPP 및 User-Agent 로테이션 처리
 class DiagnosticEngine:     # 3대 SQLi 취약점 자동 판별
@@ -54,7 +54,7 @@ class StealthUnionEngine:   # Hex-wrapped Union 공격 모듈
 class ErrorBasedEngine:     # XPath Error Induction 모듈
 class BlindExploitEngine:   # Multi-thread + Ctrl+X 인터럽트 엔진
 class IntegratedExploit:    # 사용자 인터페이스 및 통합 제어 로직
-`` `
+```
 
 ---
 
