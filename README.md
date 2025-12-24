@@ -1,71 +1,68 @@
 # SQL-Injection-Tool
-## 🚀 Total SQLi Exploit Suite v5.0 (Stealth Edition)
+## 🚀 Total SQLi Exploit Suite v5.0 (Ultimate Edition)
 
-본 프로젝트는 단순한 자동화 도구를 넘어, 최신 웹 보안 장비(WAF/IPS)를 우회하기 위한 **고급 페이로드 인코딩 및 프로토콜 변조 기술**이 집약된 SQL Injection 통합 프레임워크입니다.
-
----
-
-## 🛠 핵심 공격 모드별 상세 기술 설명
-
-각 모드는 대상 서버의 응답 메커니즘을 분석하여 최적의 데이터 추출 경로를 선택합니다.
-
-### 1. Union-Based Exploit (광속 추출)
-- **원리**: `UNION SELECT` 구문을 사용하여 서버의 정상적인 질의 결과에 우리가 원하는 데이터를 합쳐서 화면에 직접 출력합니다.
-- **특징**: 가장 빠르고 효율적이며, 테이블 전체를 한 번에 덤프할 수 있습니다.
-- **우회 기술**: 모든 데이터와 구분자를 **Hex(16진수)로 인코딩**하여 `SELECT 'admin'` 같은 키워드 기반 탐지를 원천 봉쇄합니다.
-
-### 2. Error-Based Exploit (메시지 유도)
-- **원리**: 의도적으로 SQL 문법 오류를 발생시키되, 서버가 뱉는 에러 메시지 안에 우리가 원하는 데이터를 강제로 포함시킵니다.
-- **특징**: 화면에 결과가 나오지 않아도 에러 메시지만 노출된다면 데이터 탈취가 가능합니다.
-- **핵심 기술**: MySQL의 `ExtractValue()` 또는 `UpdateXML()` 함수를 이용해 XPath 문법 에러를 유도합니다.
-
-### 3. Blind-Based (Boolean/Time) Exploit (추론 공격)
-- **원리**: 서버가 직접적인 데이터를 주지 않을 때, 질문(참/거짓)을 던져 응답의 변화나 응답 시간을 통해 데이터를 한 비트씩 알아냅니다.
-- **특징**: 가장 강력한 방어 환경에서도 동작하는 최후의 수단입니다.
-- **성능 최적화**: **병렬 처리(Multi-threading)**와 **이진 탐색(Binary Search)** 알고리즘을 적용하여 기존 Blind 방식보다 10배 이상 빠릅니다.
+이 프로젝트는 웹 보안 전문가를 위한 **고도화된 SQL Injection 통합 프레임워크**입니다. 단순한 취약점 스캔을 넘어, 최신 WAF 우회 기법과 멀티스레딩 기반의 고속 데이터 추출 엔진을 탑재하고 있습니다.
 
 ---
 
-## 🛡️ 고도화된 WAF 우회 기법 (Bypass Logic)
+## 🔥 핵심 업데이트 및 탑재 기술
 
-본 툴에는 일반적인 도구들이 지원하지 않는 강력한 우회 로직이 탑재되어 있습니다.
+### 1. HTTP Parameter Pollution (HPP) 우회
+- **메커니즘**: 동일한 파라미터 키를 중복 전송(`?id=35&id=PAYLOAD`)하여 보안 장비(WAF)의 검사를 우회합니다.
+- **StealthNet**: `requests` 라이브러리의 튜플 리스트 구조를 활용하여 백엔드 DB만 공격 페이로드를 인식하게 설계되었습니다.
 
-### 1. HTTP Parameter Pollution (HPP)
-- **개요**: 동일한 이름의 파라미터를 중복 전달하여 WAF와 백엔드 DB 서버 간의 파라미터 해석 차이를 이용합니다.
-- **작동**: `?id=1&id=UNION+SELECT...` 와 같이 구성하여 WAF는 앞의 `id=1`만 검사하고, 실제 DB는 뒤의 공격 구문을 실행하도록 속입니다.
+### 2. 하이퍼 스피드 Blind 엔진 (Multi-threading)
+- **이진 탐색(Binary Search)**: 한 문자당 최대 7번의 요청으로 모든 ASCII 문자를 판별합니다.
+- **병렬 처리**: `ThreadPoolExecutor`를 통해 8개 이상의 비트를 동시에 탐색하여 추출 시간을 획기적으로 단축했습니다.
 
-### 2. Stealth Network Layer
-- **UA Rotation**: 50여 개의 최신 브라우저 헤더를 무작위로 사용하여 자동화 도구 지문을 제거합니다.
-- **Jitter 지연**: 요청 간격을 불규칙하게 조절하여 요청 임계치 기반 차단(Rate Limiting)을 회피합니다.
+### 3. 실시간 제어 인터럽트 (Ctrl+X)
+- **추출 스킵**: Blind 추출 도중 `Ctrl+X` 입력 시 현재 테이블/데이터 추출을 즉시 중단하고 다음 타겟으로 안전하게 제어권을 넘깁니다.
+- **Admin 권한**: 키보드 후킹을 위해 실행 환경의 관리자 권한이 권장됩니다.
 
 ---
 
-## 📂 실행 및 가이드
+## 🛠 공격 모드 상세 가이드
 
-```bash
-# 1. 의존성 설치
-pip install requests tabulate
+`` `text
+1. Union-Based: 컬럼 수 자동 탐색 및 Hex 인코딩을 통한 광속 데이터 덤프
+2. Error-Based: XPath(ExtractValue) 문법 에러 유도를 통한 정밀 추출
+3. Blind (Boolean): 응답 본문의 참/거짓 지표(True Indicator) 기반 추론
+4. Blind (Time): SLEEP 함수를 이용한 응답 지연 기반 추론 (가장 강력한 은신)
+`` `
 
-# 2. 실행
+---
+
+## 📋 설치 및 실행 환경 구축
+
+`` `bash
+# 1. 필수 라이브러리 설치
+pip install requests tabulate keyboard
+
+# 2. 실행 (관리자 권한 권장)
 python Total_Exploit.py
-```
-
-
-
-### 💡 사용 팁
-- **Union 가능 시**: 무조건 1번을 사용하십시오. 데이터 추출 속도가 가장 빠릅니다.
-- **WAF 차단 발생 시**: `StealthNet` 클래스에서 프록시 리스트를 활성화하여 IP를 분산시키십시오.
-- **반응이 없을 때**: 4번(Time-based) 모드를 통해 응답 지연이 발생하는지 확인하십시오.
+`` `
 
 ---
 
-## ⚠️ 경고 및 면책 조항
+## 📂 프로젝트 구조 명세
 
-```text
-본 도구는 인가된 시스템에 대한 보안 진단 및 방어 기술 연구를 위해서만 사용되어야 합니다.
-사용자의 부주의나 악용으로 발생하는 모든 결과에 대한 책임은 사용자 본인에게 있습니다.
-```
+`` `python
+# 주요 엔진 구성
+class StealthNet:           # HPP 및 User-Agent 로테이션 처리
+class DiagnosticEngine:     # 3대 SQLi 취약점 자동 판별
+class StealthUnionEngine:   # Hex-wrapped Union 공격 모듈
+class ErrorBasedEngine:     # XPath Error Induction 모듈
+class BlindExploitEngine:   # Multi-thread + Ctrl+X 인터럽트 엔진
+class IntegratedExploit:    # 사용자 인터페이스 및 통합 제어 로직
+`` `
 
 ---
-**Last Updated**: 2025-12-24  
-**Core Engine**: Integrated Stealth Logic v5.5
+
+## ⚠️ 법적 면책 조항 (Disclaimer)
+
+본 도구는 오직 **교육적 목적 및 인가된 보안 진단**을 위해 제작되었습니다. 승인되지 않은 대상에 대한 사용은 엄격히 금지되며, 이로 인해 발생하는 모든 법적 책임은 사용자 본인에게 있습니다.
+
+---
+
+**Last Updated**: 2025-12-24 (Integrated Edition)  
+**Developer**: Gemini (Strategic Partner)
